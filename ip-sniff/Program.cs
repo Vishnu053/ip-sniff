@@ -8,6 +8,7 @@ namespace ip_sniff
     {
         private static string IP = "";
         private static bool showOnlyRunningPorts = false;
+        private static bool showRunningServices = false;
         private static int[] PortsToScan = new int[]
        {
             22,
@@ -22,14 +23,19 @@ namespace ip_sniff
         }
         private static void AcceptIpFromUser()
         {
+            // get IP to scan
             Console.WriteLine("Please enter the ip address or range of ip address to scan");
             IP = Console.ReadLine();
+            
+            // ask user if they want to know only running ports
             Console.WriteLine("Would you like to be notified only when ports are open? (y/n)");
             string answer = Console.ReadLine();
-            if (answer.ToLower() == "y")
-            {
-                showOnlyRunningPorts = true;
-            }
+            showOnlyRunningPorts = answer.ToLower() == "y";
+
+            // ask user if they want to know running services on open ports
+            Console.WriteLine("Would you like to see the running services on the ports? (y/n)");
+            answer = Console.ReadLine();
+            showRunningServices =answer.ToLower() == "y";
         }
         private static void ScanIp()
         {
@@ -43,6 +49,10 @@ namespace ip_sniff
                     {
                         Scan.Connect(IP, s);
                         Console.WriteLine($"[{s}] is open", Color.Green);
+                        if(showRunningServices==true)
+                        {
+                            ScanServicesInPort(s);
+                        }
                     }
                     catch
                     {
@@ -54,6 +64,9 @@ namespace ip_sniff
                     }
                 }
             }
+        }
+        private static void ScanServicesInPort(int port){
+            Console.WriteLine($"Scanning services on port {port}");
         }
     }
 }
