@@ -7,12 +7,11 @@ namespace ip_sniff
     internal class Program
     {
         private static string IP = "";
+        private static bool showOnlyRunningPorts = false;
         private static int[] PortsToScan = new int[]
        {
             22,
             80,
-            443,
-            3389,
             8080
        };
         static void Main(string[] args)
@@ -21,28 +20,37 @@ namespace ip_sniff
             AcceptIpFromUser();
             ScanIp();
         }
-        //function to accept a single or a range of ip address and scan each ip address for open ports
         private static void AcceptIpFromUser()
         {
             Console.WriteLine("Please enter the ip address or range of ip address to scan");
-            IP=Console.ReadLine();
+            IP = Console.ReadLine();
+            Console.WriteLine("Would you like to be notified only when ports are open? (y/n)");
+            string answer = Console.ReadLine();
+            if (answer.ToLower() == "y")
+            {
+                showOnlyRunningPorts = true;
+            }
         }
         private static void ScanIp()
         {
-            //scan the ip address
             Console.Clear();
             foreach (int s in PortsToScan)
+            // for(int s =0; s<10000;s++)
             {
                 using (TcpClient Scan = new TcpClient())
                 {
                     try
                     {
                         Scan.Connect(IP, s);
-                        Console.WriteLine($"[{s}] | OPEN", Color.Green);
+                        Console.WriteLine($"[{s}] is open", Color.Green);
                     }
                     catch
                     {
-                        Console.WriteLine($"[{s}] | CLOSED", Color.Red);
+                        if (showOnlyRunningPorts == false)
+                        {
+                            Console.WriteLine($"[{s}] is closed", Color.Red);
+                        }
+
                     }
                 }
             }
