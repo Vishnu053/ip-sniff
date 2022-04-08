@@ -4,6 +4,11 @@
     <OutputType>Exe</OutputType>
     <TargetFramework>netcoreapp3.1</TargetFramework>
     <RootNamespace>ip_sniff</RootNamespace>
+    <PackAsTool>true</PackAsTool>
+
+    <ToolCommandName>ipsniff</ToolCommandName>
+
+    <PackageOutputPath>./nupkg</PackageOutputPath>
   </PropertyGroup>
 
   <ItemGroup>
