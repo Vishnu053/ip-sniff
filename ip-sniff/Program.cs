@@ -103,11 +103,26 @@ namespace ip_sniff
         
         private static bool CheckIfValidIP(string ipAddr)
         {
-            Match match = Regex.Match(ipAddr, @"\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}");
-            return match.Success;
+            if(ipAddr=="localhost"){
+                return true;
+            }
+                Match match = Regex.Match(ipAddr, @"\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}");
+                return match.Success;
         }
         private static void ScanServicesInPort(int port){
             Console.WriteLine($"Scanning services on port {port}");
+                try
+                {
+                    using (TcpClient client = new TcpClient())
+                    {
+                        client.Connect(IP, port);
+                        Console.WriteLine($" is running on port {port}");
+                    }
+                }
+                catch
+                {
+                    Console.WriteLine($" is not running on port {port}");
+                }
         }
         private static bool PingAddress(string address)
         {
